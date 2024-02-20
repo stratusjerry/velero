@@ -479,14 +479,14 @@ to the container command in the deployment/daemonset pod template spec.
 ## How backup and restore work
 
 ### How Velero integrates with Restic
-Velero integrate Restic binary directly, so the operations are done by calling Restic commands:
+Velero integrates the Restic binary directly, so operations are done by calling Restic commands:
 - Run `restic init` command to initialize the [restic repository](https://restic.readthedocs.io/en/latest/100_references.html#terminology)
 - Run `restic prune` command periodically to prune restic repository
 - Run `restic backup` commands to backup pod volume data
 - Run `restic restore` commands to restore pod volume data
 
 ### How Velero integrates with Kopia
-Velero integrate Kopia modules into Velero's code, primarily two modules:
+Velero integrates two primary Kopia modules:
 - Kopia Uploader: Velero makes some wrap and isolation around it to create a generic file system uploader, 
 which is used to backup pod volume data
 - Kopia Repository: Velero integrates it with Velero's Unified Repository Interface, it is used to preserve the backup data and manage 
@@ -519,11 +519,11 @@ on that node. `PodVolumeRestore` is backed by restic or kopia, the controller in
 refer to [restic integration](#how-velero-integrates-with-restic) and [kopia integration](#how-velero-integrates-with-kopia) for details.  
 
 ### Path selection
-Velero's FSB supports two data movement paths, the restic path and the kopia path. Velero allows users to select 
+Velero's FSB supports two data movement paths: restic and kopia. Velero allows users to select 
 between the two paths:
-- For backup, the path is specified at the installation time through the `uploader-type` flag, the valid value is 
-either `restic` or `kopia`, or default to `kopia` if the value is not specified. The selection is not allowed to be 
-changed after the installation.
+- For backup, the path is specified at the installation time with the `uploader-type` flag, the valid value is 
+either `restic` or `kopia`, and defaults to `kopia` if not specified. The selection is not allowed to be 
+changed after installation.
 - For restore, the path is decided by the path used to back up the data, it is automatically selected. For example, 
 if you've created a backup with restic path, then you reinstall Velero with `uploader-type=kopia`, when you create 
 a restore from the backup, the restore still goes with restic path.
@@ -574,7 +574,7 @@ within each restored volume, under `.velero`, whose name is the UID of the Veler
 9. Once all such files are found, the init container's process terminates successfully and the pod moves
 on to running other init containers/the main containers.
 
-Velero won't restore a resource if a that resource is scaled to 0 and already exists in the cluster. If Velero restored the 
+Velero won't restore a resource if the resource is scaled to 0 and already exists in the cluster. If Velero restored the 
 requested pods in this scenario, the Kubernetes reconciliation loops that manage resources would delete the running pods 
 because its scaled to be 0. Velero will be able to restore once the resources is scaled up, and the pods are created and remain running.
 
